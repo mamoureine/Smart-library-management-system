@@ -1,9 +1,4 @@
-function requireText(value, fieldName) {
-  if (typeof value !== "string" || value.trim() === "") {
-    throw new TypeError(`${fieldName} must be a non-empty string`);
-  }
-  return value;
-}
+import { requireText } from "./validation.mjs";
 
 export class User {
   #id;
@@ -15,6 +10,7 @@ export class User {
     if (new.target === User) {
       throw new TypeError("User is abstract and cannot be instantiated directly");
     }
+
     this.#id = requireText(id, "id");
     this.#name = requireText(name, "name");
     this.#email = requireText(email, "email");

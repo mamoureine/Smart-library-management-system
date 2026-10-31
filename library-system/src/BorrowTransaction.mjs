@@ -1,11 +1,7 @@
-import { toDateString } from "./dateUtils.js";
-
-function requireText(value, fieldName) {
-  if (typeof value !== "string" || value.trim() === "") {
-    throw new TypeError(`${fieldName} must be a non-empty string`);
-  }
-  return value;
-}
+import { toDateString } from "./dateUtils.mjs";
+import { Book } from "./Book.mjs";
+import { User } from "./User.mjs";
+import { requireText } from "./validation.mjs";
 
 export class BorrowTransaction {
   #id;
@@ -17,17 +13,21 @@ export class BorrowTransaction {
   #overdue = false;
 
   constructor(id, borrower, book, borrowedOn, dueDate) {
-    this.#id = requireText(id, "id");
-    if (!borrower || !book) {
-      throw new TypeError("borrower and book are required");
+    if (!(borrower instanceof User)) {
+      throw new TypeError("borrower must be a User");
+    }
+    if (!(book instanceof Book)) {
+      throw new TypeError("book must be a Book");
     }
 
+    this.#id = requireText(id, "id");
     this.#borrower = borrower;
     this.#book = book;
     this.#borrowedOn = toDateString(borrowedOn, "borrowedOn");
     this.#dueDate = toDateString(dueDate, "dueDate");
+
     if (this.#dueDate < this.#borrowedOn) {
-      throw new RangeError("dueDate must not be before borrowedOn");
+      throw new RangeError("dueDate cannot be before borrowedOn");
     }
   }
 
@@ -67,6 +67,7 @@ export class BorrowTransaction {
     if (this.returned || this.#overdue) {
       return false;
     }
+
     this.#overdue = true;
     return true;
   }
@@ -75,10 +76,12 @@ export class BorrowTransaction {
     if (this.returned) {
       throw new Error(`Transaction is already returned: ${this.#id}`);
     }
+
     const normalizedDate = toDateString(returnDate, "returnDate");
     if (normalizedDate < this.#borrowedOn) {
-      throw new RangeError("returnDate must not be before borrowedOn");
+      throw new RangeError("returnDate cannot be before borrowedOn");
     }
+
     this.#returnedOn = normalizedDate;
   }
 }

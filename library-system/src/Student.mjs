@@ -1,4 +1,4 @@
-import { User } from "./User.js";
+import { User } from "./User.mjs";
 
 export class Student extends User {
   get role() {

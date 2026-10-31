@@ -1,9 +1,4 @@
-function requireText(value, fieldName) {
-  if (typeof value !== "string" || value.trim() === "") {
-    throw new TypeError(`${fieldName} must be a non-empty string`);
-  }
-  return value;
-}
+import { requireText } from "./validation.mjs";
 
 export class Book {
   #id;
@@ -37,6 +32,7 @@ export class Book {
     if (!this.#available) {
       throw new Error(`Book is already borrowed: ${this.#id}`);
     }
+
     this.#available = false;
   }
 
@@ -44,6 +40,7 @@ export class Book {
     if (this.#available) {
       throw new Error(`Book is already available: ${this.#id}`);
     }
+
     this.#available = true;
   }
 }

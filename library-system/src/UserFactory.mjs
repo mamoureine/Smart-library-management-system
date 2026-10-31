@@ -1,5 +1,5 @@
-import { Student } from "./Student.js";
-import { Teacher } from "./Teacher.js";
+import { Student } from "./Student.mjs";
+import { Teacher } from "./Teacher.mjs";
 
 export class UserFactory {
   constructor() {
